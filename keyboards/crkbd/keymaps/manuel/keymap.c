@@ -31,15 +31,17 @@ enum {
 };
 
 enum {
-    TD_ALFRED_PASTE, TD_SCREEN, TD_WINDOW_RIGHT, TD_WINDOW_LEFT, TD_CURLIES, TD_BRACKS, TD_BRACKS_NORMAL
+    TD_ALFRED_PASTE, TD_SCREEN
+};
+
+enum custom_keycodes {
+    CURLIES = SAFE_RANGE,
+    SQUARES,
+    BRACKETS
+
 };
 
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_WINDOW_LEFT] = ACTION_TAP_DANCE_DOUBLE( A(G(KC_LEFT)) , G(A(C(KC_LEFT))) ),
-    [TD_WINDOW_RIGHT] = ACTION_TAP_DANCE_DOUBLE( A(G(KC_RIGHT)) , G(A(C(KC_RIGHT))) ),
-    [TD_CURLIES] = ACTION_TAP_DANCE_DOUBLE( KC_LCBR , KC_RCBR ),
-    [TD_BRACKS] = ACTION_TAP_DANCE_DOUBLE( KC_LBRC , KC_RBRC ),
-    [TD_BRACKS_NORMAL] = ACTION_TAP_DANCE_DOUBLE( KC_LPRN , KC_RPRN ),
     [TD_ALFRED_PASTE] = ACTION_TAP_DANCE_DOUBLE( G(KC_V) , G(A(KC_V)) ),
     [TD_SCREEN] = ACTION_TAP_DANCE_DOUBLE( S(G(KC_4)) , S(G(C(KC_4))) ),
 };
@@ -49,16 +51,16 @@ tap_dance_action_t tap_dance_actions[] = {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
  * BASE LAYER
-  [_TPL] = LAYOUT_wrapper( \
+  [_QWERTY] = LAYOUT_wrapper( \
   //,-----------------------------------------------------.      ,----------------------------------------------------.
-    |  Tab   |   Q    |   W    |   E    |   R    |   T    |      |    Y   |   U    |   I    |   O    |   P    |  Bksp |
+    |  hmrw  |   Q    |   W    |   E    |   R    |   T    |      |    Y   |   U    |   I    |   O    |   P    |  Alfr |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    | NpdESC |   A    |   S    |   D    |   F    |   G    |      |    H   |   J    |   K    |   L    |   Ş    |  İ    |
+    | ------ |   A    |   S    |   D    |   F    |   G    |      |    H   |   J    |   K    |   L    |   '    |  ;    |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    | SftCaps|   Z    |   X    |   C    |   V    |   B    |      |    N   |   M    |   Ö    |   Ç    |   .    | CtlEnt|
+    | SftCaps|   Z    |   X    |   C    |   V    |   B    |      |    N   |   M    |   ,    |   .    |   /    | ----- |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
                                     ,-----------------------,  ,-----------------------.
-                                    |  OS|. | Lwr|, | Space*|  |Sda|Ent|Raise|"| LAlt|.|
+                                    |Med/Esc|Nav/Spc|Til/Tab|  |Sym/Ent|Num/Bsp|Fun/Del|
                                    /|-------+-------+-------'  +-------+-------+-------|\
   ),
 */
@@ -71,58 +73,59 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
 /*
- * LOWER LAYER
-  [_TPL] = LAYOUT_wrapper( \
-  //,-----------------------------------------------------.      ,----------------------------------------------------.
-    |   >    |   !    |   '    |   ^    |   +    |   %    |      |    &   |   /    |   (    |   )    |   =    |  Bksp |
-  //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    |   F1   |   F2   |   F3   |   F4   |   F5   |   F6   |      |   "$"  |   ?    |   _    |   Ğ    |   Ü    |  -    |
-  //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    |   F7   |   F8   |   F9   |   F10  |   F11  |   F12  |      |   "["  |   "]"  |   "{"  |   "}"  |   <    |  ">"  |
-  //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
+ * Media LAYER
+  [_MEDIA] = LAYOUT_wrapper( \
+  //,-----------------------------------------------------.      ,-----------------------------------------------------.
+    |  BOOT  | ------ | ------ | ------ | ------ | ------ |      | ------ | RGBTOG | RGBMOD | RGBHUI | RGBSAI | RGBVAI |
+  //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+------- |
+    | ------ |KC_LCTL |KC_LALT |KC_LGUI |KC_LSFT | ------ |      | ------ |KC_MPRV |KC_VOLD |KC_VOLU |KC_MNXT | ------ |
+  //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+--------|
+    | ------ |KC_ALGR | ------ | ------ | ------ | ------ |      | ------ | ------ | ------ |KC_BRMD |KC_BRMU | ------ |
+  //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+--------|
                                     ,-----------------------,  ,-----------------------.
-                                    |       |       |       |  |       | ADJUST|       |
+                                    |       |       |       |  |KC_MSTP|KC_MPLY|KC_MUTE|
                                    /|-------+-------+-------'  +-------+-------+-------|\
   ),
 */
   [_MEDIA] = LAYOUT_split_3x6_3(
     QK_BOOT,  _______,  _______,  _______,  _______,   _______,          _______,    RGB_TOG,  RGB_MOD,  RGB_HUI,  RGB_SAI,  RGB_VAI,
-    _______,  KC_LCTL,  KC_LALT,  KC_LGUI,  KC_LSFT,       _______,          _______,    KC_MPRV,  KC_VOLD,  KC_VOLU,  KC_MNXT,  _______,
+    _______,  KC_LCTL,  KC_LALT,  KC_LGUI,  KC_LSFT,   _______,          _______,    KC_MPRV,  KC_VOLD,  KC_VOLU,  KC_MNXT,  _______,
     _______,  KC_ALGR,  _______,  _______,  _______,   _______,          _______,    _______,  _______,  KC_BRMD,  KC_BRMU,  _______,
                                   _______,  _______,   _______,          KC_MSTP,  KC_MPLY,  KC_MUTE
   ),
 
 /*
- * RAISE LAYER
+ * NAVIGATION LAYER
   [_TPL] = LAYOUT_wrapper( \
   //,-----------------------------------------------------.      ,----------------------------------------------------.
-    |   Tab  |   1    |   2    |   3    |   4    |   5    |      |    6   |   7    |   8    |   9    |   0    |  Bksp |
+    | ------ |  Save  |AlfPaste|  Copy  |  Cut   |  Undo  |      |  Save  |AlfPaste|  Copy  |  Cut   |  Undo  | ----- |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    |   F1   |   F2   |   F3   |   F4   |   F5   |   F6   |      |        |   *    |   -    |   "\"  |   "|"  |  ,    |
+    | ------ |KC_LCTL |KC_LALT |KC_LGUI |KC_LSFT | ------ |      |KC_CAPS |KC_LEFT |KC_DOWN |  KC_UP |KC_RGHT | ----- |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    |   F7   |   F8   |   F9   |   F10  |   F11  |   F12  |      |    '   |   #    |   "    |   "~"  |   "`"  |  <>|  |
+    | ------ |KC_ALGR | ------ | ------ | ------ | ------ |      | KC_INS |KC_HOME |KC_PGDN |KC_PGUP | KC_END | ----- |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
                                     ,-----------------------,  ,-----------------------.
-                                    |       |       |       |  |       |       |       |
+                                    |       |       |       |  | KC_ENT|KC_BSPC| KC_DEL|
                                    /|-------+-------+-------'  +-------+-------+-------|\
   ),
 */
   [_NAV] = LAYOUT_split_3x6_3(
     _______,  G(KC_S),  TD(TD_ALFRED_PASTE),  G(KC_C),  G(KC_X),  G(KC_Z),                       G(KC_S),  TD(TD_ALFRED_PASTE),  G(KC_C),  G(KC_X),  G(KC_Z),  _______,
     _______,  KC_LCTL,  KC_LALT,              KC_LGUI,  KC_LSFT,  _______,                       KC_CAPS,  KC_LEFT,              KC_DOWN,  KC_UP,    KC_RGHT,  _______,
-    _______,  _______,  _______,  _______,  _______,  _______,                                   KC_INS,   KC_HOME,              KC_PGDN,  KC_PGUP,  KC_END,   _______,
+    _______,  _______,  _______,              _______,  _______,  _______,                       KC_INS,   KC_HOME,              KC_PGDN,  KC_PGUP,  KC_END,   _______,
                                 _______,    _______,    _______,                                       KC_ENT,   KC_BSPC,        KC_DEL
   ),
 
 /*
- * SPACE LAYER
-  [_TPL] = LAYOUT_wrapper( \
+ * TILLING LAYER
+    Set to custom skhd shortcuts via yabai
+  [_TILNAV] = LAYOUT_wrapper( \
   //,-----------------------------------------------------.      ,----------------------------------------------------.
-    |        |  CMD+1 |  CMD+2 |  CMD+3 |  CMD+4 | CMD+5  |      |  CMD+6 |  CMD+7 |  CMD+8 |  CMD+9 |  CMD+0 | LCKOSX|
+    | ------ |  Save  |AlfPaste|  Copy  |  Cut   |  Undo  |      | ------ | ------ | YA_BLN | YA_FUL | YA_ROT | ----- |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    |        | Brght▼ | Brght▲ |        |        |        |      |  Left  |  Down  |   Up   |  Right |        |       |
+    | ------ |KC_LCTL |KC_LALT |KC_LGUI |KC_LSFT | ------ |      | ------ |YA_LEFT |YA_DOWN |  YA_UP |YA_RGHT | ----- |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    |        |        |        |        |        |        |      |        |  Prev  |   Next |  Vol-  |  Vol+  |  Play |
+    | ------ |KC_ALGR | ------ | ------ | ------ | ------ |      | ------ | ------ | ------ | ------ | ------ | ----- |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
                                     ,-----------------------,  ,-----------------------.
                                     |       |       |       |  |       |       |       |
@@ -131,48 +134,47 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
   [_TILNAV] = LAYOUT_split_3x6_3(
     _______, G(KC_S),  TD(TD_ALFRED_PASTE),  G(KC_C),  G(KC_X),  G(KC_Z),                _______, _______,    A(KC_F19),  A(KC_F18),  A(KC_F17), _______,
-    _______, KC_LCTL,  KC_LALT,              KC_LGUI,  KC_LSFT,  _______,                KC_LEFT, A(KC_F16),  A(KC_F15),  A(KC_F14),  A(KC_F13), _______,
+    _______, KC_LCTL,  KC_LALT,              KC_LGUI,  KC_LSFT,  _______,                _______, A(KC_F16),  A(KC_F15),  A(KC_F14),  A(KC_F13), _______,
     _______, KC_ALGR,  _______,              _______,  _______,  _______,                _______,  _______,   _______,    _______,    _______,   _______,
                                              _______,  _______,  _______,                _______, _______, _______
   ),
 
 /*
- * NUMPAD LAYER
- * KC_PDOT is comma on the Turkish layout ¯\_(ツ)_/¯
-  [_TPL] = LAYOUT_wrapper( \
+ * SYMBOL LAYER
+ *
+  [_SYM] = LAYOUT_wrapper( \
   //,-----------------------------------------------------.      ,----------------------------------------------------.
-    |        |        |        |        |        |        |      |   =    |  Num7  |  Num8  |  Num9  |   -    |  Bksp |
+    |        |  PIPE  |   &    |   *    |   \    |   []   |      |        |        |        |        |        |  Bksp |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    |        |        |        |        |        |        |      |   .    |  Num4  |  Num5  |  Num6  |   +    |   *   |
+    |        |    :   |   $    |   %    |   ^    |   ()   |      |        |  SHIFT |   CMD  |   ALT  |  CTRL  |       |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    |        |        |        |        |        |        |      |   ,    |  Num1  |  Num2  |  Num3  |   .    |   /   |
+    |        |   ~    |    !   |   @    |   #    |   {}   |      |        |        |        |        |        |       |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
                                     ,-----------------------,  ,-----------------------.
-                                    |       |       |       |  |  Ent  |  Num0 |  Num0 |
+                                    |   ;   |   -   |   _   |  |       |       |       |
                                    /|-------+-------+-------'  +-------+-------+-------|\
   ),
 */
   [_SYM] = LAYOUT_split_3x6_3(
-    _______,  KC_PIPE,  KC_AMPR,  KC_ASTR,  KC_BSLS,  TD(TD_BRACKS),         _______, _______, _______, _______, _______, KC_BSPC,
-    _______,  KC_COLN,  KC_DLR,   KC_PERC,  KC_CIRC,  TD(TD_BRACKS_NORMAL),  _______, KC_LSFT,  KC_LGUI,  KC_LALT,  KC_LCTL, _______,
-    _______,  KC_TILD,  KC_EXLM,  KC_AT,    KC_HASH,  TD(TD_CURLIES),        _______, _______, _______, _______, _______, _______,
+    _______,  KC_PIPE,  KC_AMPR,  KC_ASTR,  KC_BSLS,  SQUARES,         _______, _______, _______, _______, _______, KC_BSPC,
+    _______,  KC_COLN,  KC_DLR,   KC_PERC,  KC_CIRC,  BRACKETS,        _______, KC_LSFT,  KC_LGUI,  KC_LALT,  KC_LCTL, _______,
+    _______,  KC_TILD,  KC_EXLM,  KC_AT,    KC_HASH,  CURLIES,         _______, _______, _______, _______, _______, _______,
                                   KC_SCLN,  KC_PMNS,  KC_UNDS,               _______, _______, _______
   ),
 
 
   /*
- * SODA LAYER
- * KC_PDOT is comma on the Turkish layout ¯\_(ツ)_/¯
+ * NUMBER LAYER
   [_TPL] = LAYOUT_wrapper( \
   //,-----------------------------------------------------.      ,----------------------------------------------------.
-    |        |        |   Up   |        |        |        |      |        |        |        |        |        |       |
+    |        |   =    |   7    |   8    |   9    |   *    |      |        |        |        |        |        |  Bksp |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    |        |  Left  |  Down  | Right  |        |        |      |        |        |        |        |        |       |
+    |        |   :    |   4    |   5    |   6    |   -    |      |        |  SHIFT |   CMD  |   ALT  |  CTRL  |       |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    |        |        |        |        |        |        |      |        |        |        |        |        |       |
+    |        |   /    |   1    |   2    |   3    |   +    |      |        |        |        |        |        |       |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
                                     ,-----------------------,  ,-----------------------.
-                                    |       |       |       |  |       |       |       |
+                                    |   .   |   0   |   ,   |  |       |       |       |
                                    /|-------+-------+-------'  +-------+-------+-------|\
   ),
 */
@@ -186,17 +188,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 /*
- * ADJUST LAYER
+ * FUN LAYER
   [_TPL] = LAYOUT_wrapper( \
   //,-----------------------------------------------------.      ,----------------------------------------------------.
-    |  QK_BOOT | EEPRST |        |        |        |        |      |        |        |        |        |        |       |fffgg
+    |        |   F12  |   F7   |   F8   |   F9   |PRNTSCRN|      |        |        |        |        |        |QK_BOOT|
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    | RGBTog |  HUE▲  |  SAT▲  | BRGHT▲ |        |        |      |        |        |        |        |        |       |
+    |        |   F11  |   F4   |   F5   |   F6   |        |      |        |  SHIFT |   CMD  |   ALT  |  CTRL  |       |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
-    | RGBMOD |  HUE▼  |  SAt▼  | BRGHT▼ |        |        |      |        |        |        |        |        |       |
+    |        |   F10  |   F1   |   F2   |   F3   | PAUSE  |      |        |        |        |        |        |       |
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+-------|
                                     ,-----------------------,  ,-----------------------.
-                                    |   OS  |       | Space |  |  Ent  |       |  ALT  |
+                                    |  ESC  | SPACE |  TAB  |  |       |       |       |
                                    /|-------+-------+-------'  +-------+-------+-------|\
   ),
 */
@@ -204,7 +206,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, KC_F12,  KC_F7,   KC_F8,   KC_F9,   KC_PSCR,                      _______, _______, _______, _______, _______, QK_BOOT,
     _______, KC_F11,  KC_F4,   KC_F5,   KC_F6,   _______,                     _______, KC_LSFT,  KC_LGUI,  KC_LALT,  KC_LCTL, _______,
     _______, KC_F10,  KC_F1,   KC_F2,   KC_F3,   KC_PAUS,                    _______, _______, _______, _______, _______, _______,
-                                         KC_APP,  KC_SPC,  KC_TAB,     _______, _______, _______
+                                         KC_ESC,  KC_SPC,  KC_TAB,     _______, _______, _______
   )
 };
 
@@ -375,14 +377,14 @@ void render_bootmagic_status(bool status) {
     }
 }
 
-void oled_render_logo(void) {
-    static const char PROGMEM crkbd_logo[] = {
-        0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f, 0x90, 0x91, 0x92, 0x93, 0x94,
-        0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3, 0xb4,
-        0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4,
-        0};
-    oled_write_P(crkbd_logo, false);
-}
+//void oled_render_logo(void) {
+//    static const char PROGMEM crkbd_logo[] = {
+//        0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f, 0x90, 0x91, 0x92, 0x93, 0x94,
+//        0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3, 0xb4,
+//        0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4,
+//        0};
+//    oled_write_P(crkbd_logo, false);
+//}
 
 void oled_render_benz(void) {
     static const char PROGMEM benz_logo[] = {
@@ -426,8 +428,6 @@ void oled_render_benz(void) {
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
         oled_render_layer_state();
-        oled_render_logo();
-
 
     } else {
         oled_render_benz();
@@ -451,11 +451,18 @@ bool oled_task_user(void) {
     }
     return false;
 }
-
-//bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-//  if (record->event.pressed) {
-//    set_keylog(keycode, record);
-//  }
-//  return true;
-//}
 #endif // OLED_DRIVER_ENABLE
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+
+    switch(keycode) {
+        case CURLIES:
+              if (record->event.pressed) {
+                SEND_STRING("{}");
+                tap_code(KC_LEFT);
+              }
+    }
+    return false;
+
+  return true;
+}
